@@ -1,6 +1,6 @@
 {
   "name": "http-controller",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Easily create a proxy that matches your Web API Controller. Supports axios.",
   "main": "index.js",
   "scripts": {
