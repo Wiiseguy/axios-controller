@@ -23,7 +23,8 @@
     "url": "https://github.com/Wiiseguy/http-controller/issues"
   },
   "homepage": "https://github.com/Wiiseguy/http-controller#readme",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "aqa": "^1.0.0"
   }
 }

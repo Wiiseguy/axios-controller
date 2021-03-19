@@ -3,7 +3,7 @@ Easily create a proxy that matches your Web API Controller. Supports axios.
 
 ### Installation
 ```
-npm i http-controller
+npm i @wiiseguy/http-controller
 ```
 
 ### Usage
