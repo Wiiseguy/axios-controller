@@ -1,6 +1,6 @@
 {
-  "name": "@wiiseguy/http-controller",
-  "version": "0.2.0",
+  "name": "axios-controller",
+  "version": "0.4.0",
   "description": "Easily create a proxy that matches your Web API Controller. Supports axios.",
   "main": "index.js",
   "scripts": {
@@ -8,22 +8,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Wiiseguy/http-controller.git"
+    "url": "git+https://github.com/Wiiseguy/axios-controller.git"
   },
   "keywords": [
     "http",
     "controller",
     "axios",
-    "http-controller",
+    "axios-controller",
     "mvc"
   ],
   "author": "Wiiseguy",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Wiiseguy/http-controller/issues"
+    "url": "https://github.com/Wiiseguy/axios-controller/issues"
   },
-  "homepage": "https://github.com/Wiiseguy/http-controller#readme",
-  "dependencies": {},
+  "homepage": "https://github.com/Wiiseguy/axios-controller#readme",
   "devDependencies": {
     "aqa": "^1.0.0"
   }

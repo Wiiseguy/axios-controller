@@ -1,9 +1,9 @@
-# http-controller
+# axios-controller
 Easily create a proxy that matches your Web API Controller. Supports axios.
 
 ### Installation
 ```
-npm i @wiiseguy/http-controller
+npm i axios-controller
 ```
 
 ### Usage
@@ -11,7 +11,7 @@ npm i @wiiseguy/http-controller
 #### Usage with Axios
 
 ```js
-const { buildController } = require('http-controller');
+const { buildController } = require('axios-controller');
 
 const axiosInstance = axios.create({
   baseURL: 'https://api.example.com/'
@@ -44,7 +44,7 @@ await authorController.getBooksByAuthor(8); // [{ id: 1, author: 8, title: 'ABC'
 
 #### No response unwrapping
 
-Note that http-controller will 'unwrap' the response object. This means that by default the `data` property of the Axios response will be returned.
+Note that axios-controller will 'unwrap' the response object. This means that by default the `data` property of the Axios response will be returned.
 You can disable this behavior by setting the `unwrap` option to false:
 
 ```js
