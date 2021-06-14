@@ -4,7 +4,8 @@
   "description": "Easily create a proxy that matches your Web API Controller. Supports axios.",
   "main": "index.js",
   "scripts": {
-    "test": "aqa"
+    "test": "aqa",
+    "test:watch": "aqa --watch"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
   },
   "homepage": "https://github.com/Wiiseguy/axios-controller#readme",
   "devDependencies": {
-    "aqa": "^1.0.0"
+    "aqa": "^1.1.14",
+    "axios": "^0.21.1"
   }
 }

@@ -23,6 +23,19 @@ function delayPromise(resolveValue, ms) {
     });
 }
 
+function removeLeadingSlash(url) {
+    if(typeof url !== 'string') return '';
+    url = url.trimStart();
+    return url.replace(/^\/+/, '');
+}
+
+function appendSlash(url) {
+    if(typeof url !== 'string') return '/';
+    url = url.trimEnd(); 
+    if(!url.endsWith('/')) return url + '/';
+    return url;
+}
+
 function buildController(proxy, opts) {
     opts = {
         ...buildControllerDefaultOpts, 
@@ -70,6 +83,12 @@ function buildController(proxy, opts) {
                 };
             }
         });
+
+        ctrl.getUri = (...args) => {
+            let url = controller + '/' + args.map(u => removeLeadingSlash(u)).join('/');
+            let baseUrl = proxy.defaults.baseURL;
+            return new URL(removeLeadingSlash(url), appendSlash(baseUrl)).toString()
+        };
 
         return ctrl;
     }
