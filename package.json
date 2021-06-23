@@ -26,6 +26,7 @@
   "homepage": "https://github.com/Wiiseguy/axios-controller#readme",
   "devDependencies": {
     "aqa": "^1.1.14",
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "jsdom": "^16.6.0"
   }
 }

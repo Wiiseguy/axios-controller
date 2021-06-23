@@ -36,6 +36,12 @@ function appendSlash(url) {
     return url;
 }
 
+function toAbsoluteUrl(url) {
+    let a = document.createElement('a');
+    a.href = url;
+    return a.href;
+}
+
 function buildController(proxy, opts) {
     opts = {
         ...buildControllerDefaultOpts, 
@@ -86,7 +92,7 @@ function buildController(proxy, opts) {
 
         ctrl.getUri = (...args) => {
             let url = controller + '/' + args.map(u => removeLeadingSlash(u)).join('/');
-            let baseUrl = proxy.defaults.baseURL;
+            let baseUrl = toAbsoluteUrl(proxy.defaults.baseURL);
             return new URL(removeLeadingSlash(url), appendSlash(baseUrl)).toString()
         };
 
