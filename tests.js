@@ -126,11 +126,6 @@ test('url test', async t => {
 });
 
 test('url test - relative baseURL', async t => {
-    /* global.document = {
-        createElement() {
-            
-        }
-    }; */
     let proxy = axios.create({ baseURL: '/api' });
     let Controller = buildController(proxy);
     

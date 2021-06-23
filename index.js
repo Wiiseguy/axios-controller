@@ -1,6 +1,6 @@
 const buildControllerDefaultOpts = {
     unwrap: true
-}
+};
 
 // Unwrap an axios result object
 function unwrap(promise) {
@@ -37,7 +37,7 @@ function appendSlash(url) {
 }
 
 function toAbsoluteUrl(url) {
-    let a = document.createElement('a');
+    const a = document.createElement('a');
     a.href = url;
     return a.href;
 }
@@ -48,51 +48,51 @@ function buildController(proxy, opts) {
         ...opts
     };
     return function (controller, fn) {
-        let ctrlProxy = {
-            get: function (url = '', ...args) {
+        const ctrlProxy = {
+            get(url = '', ...args) {
                 return proxy.get(controller + '/' + url, ...args);
             },
-            head: function (url = '', ...args) {
+            head(url = '', ...args) {
                 return proxy.head(controller + '/' + url, ...args);
             },
-            post: function (url = '', ...args) {
+            post(url = '', ...args) {
                 if (typeof url !== 'string') {
                     args = [url];
                     url = '';
                 }
                 return proxy.post(controller + '/' + url, ...args);
             },
-            put: function (url = '', ...args) {
+            put(url = '', ...args) {
                 if (typeof url !== 'string') {
                     args = [url];
                     url = '';
                 }
                 return proxy.put(controller + '/' + url, ...args);
             },
-            patch: function (url = '', ...args) {
+            patch(url = '', ...args) {
                 if (typeof url !== 'string') {
                     args = [url];
                     url = '';
                 }
                 return proxy.patch(controller + '/' + url, ...args);
             },
-            delete: function (url = '', ...args) {
+            delete(url = '', ...args) {
                 return proxy.delete(controller + '/' + url, ...args);
             }
         };
 
-        let ctrl = fn(ctrlProxy);
-        Object.entries(ctrl).forEach(([key, val]) => {
-            if(opts.unwrap) {
-                ctrl[key] = function () {
-                    return unwrap(val(...arguments));
-                };
-            }
-        });
+        const ctrl = fn(ctrlProxy);
+        if(opts.unwrap) {
+            Object
+                .entries(ctrl)
+                .forEach(([key, val]) =>                 
+                    ctrl[key] = (...args) => unwrap(val(...args))                
+                );
+        }
 
         ctrl.getUri = (...args) => {
-            let url = controller + '/' + args.map(u => removeLeadingSlash(u)).join('/');
-            let baseUrl = toAbsoluteUrl(proxy.defaults.baseURL);
+            const url = controller + '/' + args.map(u => removeLeadingSlash(u)).join('/');
+            const baseUrl = toAbsoluteUrl(proxy.defaults.baseURL);
             return new URL(removeLeadingSlash(url), appendSlash(baseUrl)).toString()
         };
 
