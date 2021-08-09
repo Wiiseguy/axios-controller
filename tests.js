@@ -26,17 +26,15 @@ test('proxy test', async t => {
     let proxy = createMockProxy();
     let Controller = buildController(proxy);
     
-    let bookController = Controller('book', http => {
-        return {
-            all: _ => http.get(),
-            get: id => http.get(id),
-            head: id => http.head(id),
-            create: book => http.post(book),
-            update: book => http.put(book),
-            patch: book => http.patch(book),
-            delete: id => http.delete(id),
-        }
-    });
+    let bookController = Controller('book', http => ({
+        all: _ => http.get(),
+        get: id => http.get(id),
+        head: id => http.head(id),
+        create: book => http.post(book),
+        update: book => http.put(book),
+        patch: book => http.patch(book),
+        delete: id => http.delete(id)        
+    }));
 
     let r1 = await bookController.all();
     let r2 = await bookController.get(1);
@@ -85,11 +83,9 @@ test('proxy test - no unwrap', async t => {
     let proxy = createMockProxy();
     let Controller = buildController(proxy, {unwrap:false});
     
-    let bookController = Controller('book', http => {
-        return {
-            all: _ => http.get()
-        }
-    });
+    let bookController = Controller('book', http => ({
+        all: _ => http.get()
+    }));
 
     let r1 = await bookController.all();
     
@@ -107,15 +103,7 @@ test('url test', async t => {
     let proxy = axios.create({ baseURL: 'http://www.example.app/api' });
     let Controller = buildController(proxy);
     
-    let bookController = Controller('book', (http, ctrl) => {
-        return {
-            url1: _ => ctrl.url('test'),
-            url2: _ => ctrl.url('test', 'foo', 'bar'),
-            url3: _ => ctrl.url(''),
-            url4: _ => ctrl.url(),
-            url5: _ => ctrl.url('/test'),
-        }
-    });
+    let bookController = Controller('book');
     
     // Test mock reponses
     t.is(bookController.getUri('test'), 'http://www.example.app/api/book/test');
@@ -129,15 +117,7 @@ test('url test - relative baseURL', async t => {
     let proxy = axios.create({ baseURL: '/api' });
     let Controller = buildController(proxy);
     
-    let bookController = Controller('book', (http, ctrl) => {
-        return {
-            url1: _ => ctrl.url('test'),
-            url2: _ => ctrl.url('test', 'foo', 'bar'),
-            url3: _ => ctrl.url(''),
-            url4: _ => ctrl.url(),
-            url5: _ => ctrl.url('/test'),
-        }
-    });
+    let bookController = Controller('book');
     
     // Test mock reponses
     t.is(bookController.getUri('test'), 'http://mock/api/book/test');
@@ -148,23 +128,15 @@ test('url test - relative baseURL', async t => {
 });
 
 test('url test - all trailing and leading slashes', async t => {
-    let proxy = axios.create({ baseURL: 'http://www.example.app/api/' });
+    let proxy = axios.create({ baseURL: 'http://www.example.app/api//' });
     let Controller = buildController(proxy);
     
-    let bookController = Controller('/book', (http, ctrl) => {
-        return {
-            url1: _ => ctrl.url('/test/'),
-            url2: _ => ctrl.url('/test/', '/foo/', '/bar/'),
-            url3: _ => ctrl.url('/'),
-            url4: _ => ctrl.url(),
-            url5: _ => ctrl.url('////test'),
-        }
-    });
+    let bookController = Controller('//book//');
     
     // Test mock reponses
-    t.is(bookController.getUri('test'), 'http://www.example.app/api/book/test');
-    t.is(bookController.getUri('test', 'foo', 'bar'), 'http://www.example.app/api/book/test/foo/bar');
-    t.is(bookController.getUri(''), 'http://www.example.app/api/book/');
+    t.is(bookController.getUri('//test//'), 'http://www.example.app/api/book/test');
+    t.is(bookController.getUri('/test/', '/foo/', '/bar/'), 'http://www.example.app/api/book/test/foo/bar');
+    t.is(bookController.getUri('/'), 'http://www.example.app/api/book/');
     t.is(bookController.getUri(), 'http://www.example.app/api/book/');
-    t.is(bookController.getUri('/test'), 'http://www.example.app/api/book/test');
+    t.is(bookController.getUri('////test///'), 'http://www.example.app/api/book/test');
 });

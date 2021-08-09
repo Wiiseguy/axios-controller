@@ -23,10 +23,22 @@ function delayPromise(resolveValue, ms) {
     });
 }
 
-function removeLeadingSlash(url) {
+function removeLeadingSlashes(url) {
     if(typeof url !== 'string') return '';
     url = url.trimStart();
     return url.replace(/^\/+/, '');
+}
+
+function removeTrailingSlashes(url) {
+    if(typeof url !== 'string') return '';
+    url = url.trimStart();
+    return url.replace(/\/+$/, '');
+}
+
+function removeLeadingAndTrailingSlashes(url) {
+    url = removeLeadingSlashes(url);
+    url = removeTrailingSlashes(url);
+    return url;
 }
 
 function appendSlash(url) {
@@ -42,12 +54,18 @@ function toAbsoluteUrl(url) {
     return a.href;
 }
 
+function createEmptyProxy() {
+    return {};
+}
+
 function buildController(proxy, opts) {
     opts = {
         ...buildControllerDefaultOpts, 
         ...opts
     };
     return function (controller, fn) {
+        fn = fn || createEmptyProxy;
+
         const ctrlProxy = {
             get(url = '', ...args) {
                 return proxy.get(controller + '/' + url, ...args);
@@ -91,9 +109,9 @@ function buildController(proxy, opts) {
         }
 
         ctrl.getUri = (...args) => {
-            const url = controller + '/' + args.map(u => removeLeadingSlash(u)).join('/');
-            const baseUrl = toAbsoluteUrl(proxy.defaults.baseURL);
-            return new URL(removeLeadingSlash(url), appendSlash(baseUrl)).toString()
+            const url = removeTrailingSlashes(controller) + '/' + args.map(u => removeLeadingAndTrailingSlashes(u)).join('/') + '';
+            const baseUrl = removeTrailingSlashes(toAbsoluteUrl(proxy.defaults.baseURL));
+            return new URL(removeLeadingSlashes(url), appendSlash(baseUrl)).toString()
         };
 
         return ctrl;
