@@ -1,7 +1,9 @@
-const test = require('aqa');
-const axios = require('axios')
-const jsdom = require("jsdom");
-const { buildController } = require('./index.js');
+import test from 'aqa';
+import axios from 'axios';
+import jsdom from 'jsdom';
+import axiosController from './index.js';
+
+const buildController = axiosController.buildController;
 
 // Mock DOM
 const { JSDOM } = jsdom;

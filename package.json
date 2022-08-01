@@ -3,6 +3,8 @@
   "version": "0.5.2",
   "description": "Easily create a proxy that matches your Web API Controller. Supports axios.",
   "main": "index.js",
+  "type": "module",
+  "types": "index.d.ts",
   "scripts": {
     "test": "aqa",
     "test:watch": "aqa --watch"

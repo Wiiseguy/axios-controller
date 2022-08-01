@@ -8,7 +8,6 @@ npm i axios-controller
 
 ### Usage
 
-#### Usage with Axios
 
 ```js
 const { buildController } = require('axios-controller');
