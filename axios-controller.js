@@ -83,7 +83,7 @@ function createEmptyProxy() {
  * @param {{ unwrap?: boolean }} opts 
  * @returns 
  */
-function buildController(proxy, opts) {
+function build(proxy, opts) {
     opts = {
         ...buildControllerDefaultOpts, 
         ...opts
@@ -147,5 +147,6 @@ function buildController(proxy, opts) {
 
 export default {
     unwrap,
-    buildController
+    buildController: build, // legacy
+    build
 }

@@ -10,15 +10,16 @@ npm i axios-controller
 
 
 ```js
-const { buildController } = require('axios-controller');
+import axios from 'axios';
+import axiosController from 'axios-controller';
 
 const axiosInstance = axios.create({
   baseURL: 'https://api.example.com/'
 });
 
-let Controller = buildController(axiosInstance);
+const Controller = axiosController.build(axiosInstance);
 
-let bookController = Controller('book', http => {
+const bookController = Controller('book', http => {
   return {
     all: _ => http.get(),
     get: id => http.get(id),
@@ -29,7 +30,7 @@ let bookController = Controller('book', http => {
 });
 
 // You can use Controller to create multiple controller proxies
-let authorController = Controller('author', http => {
+const authorController = Controller('author', http => {
   return {
     get: id => http.get(id),
     getBooksByAuthor: id => http.get(`books/${id}`)
@@ -47,5 +48,5 @@ Note that axios-controller will 'unwrap' the response object. This means that by
 You can disable this behavior by setting the `unwrap` option to false:
 
 ```js
-let Controller = buildController(axiosInstance, { unwrap: false });
+const Controller = buildController(axiosInstance, { unwrap: false });
 ```

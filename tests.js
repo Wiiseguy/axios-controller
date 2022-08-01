@@ -1,9 +1,9 @@
 import test from 'aqa';
-import axios from 'axios';
 import jsdom from 'jsdom';
+import axios from 'axios';
 import axiosController from './index.js';
 
-const buildController = axiosController.buildController;
+const buildController = axiosController.build;
 
 // Mock DOM
 const { JSDOM } = jsdom;
