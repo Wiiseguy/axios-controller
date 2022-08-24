@@ -4,7 +4,8 @@ declare interface AxiosControllerHttp {
     post: (...args: any[]) => Promise<any>;
     put: (...args: any[]) => Promise<any>;    
     patch: (...args: any[]) => Promise<any>;
-    delete: (...args: any[]) => Promise<any>;    
+    delete: (...args: any[]) => Promise<any>;
+    defaults: Record<string, any>
 }
 
 declare interface AxiosControllerInstance {

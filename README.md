@@ -8,11 +8,20 @@ npm i axios-controller
 
 ### Usage
 
+CommonJS
+```js
+const axios = require('axios');
+const axiosController = require('axios-controller');
+```
+
+ES Module
 
 ```js
 import axios from 'axios';
 import axiosController from 'axios-controller';
+```
 
+```js
 const axiosInstance = axios.create({
   baseURL: 'https://api.example.com/'
 });

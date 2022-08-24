@@ -12,7 +12,7 @@ function unwrap(promise) {
         return promise;
     }
     return promise.then(res => {
-        return res.data;
+        return res ? res.data : null;
     }).catch(err => {
         if (err.response) {
             return Promise.reject(err.response.data);
@@ -79,8 +79,8 @@ function createEmptyProxy() {
 
 /**
  * 
- * @param {import("axios").AxiosInstance} proxy 
- * @param {{ unwrap?: boolean }} opts 
+ * @param {AxiosControllerHttp} proxy 
+ * @param {{ unwrap?: boolean }} [opts] 
  * @returns 
  */
 function build(proxy, opts) {
@@ -91,8 +91,7 @@ function build(proxy, opts) {
     /** @type {(controller: any, fn?: any) => any} */
     return function (controller, fn) {
         fn = fn || createEmptyProxy;
-
-        /** @type {AxiosControllerHttp} */
+        
         const ctrlProxy = {
             get(url = '', ...args) {
                 return proxy.get(controller + '/' + url, ...args);
@@ -145,7 +144,7 @@ function build(proxy, opts) {
     }
 }
 
-export default {
+module.exports = {
     unwrap,
     buildController: build, // legacy
     build

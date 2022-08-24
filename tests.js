@@ -1,9 +1,7 @@
-import test from 'aqa';
-import jsdom from 'jsdom';
-import axios from 'axios';
-import axiosController from './index.js';
-
-const buildController = axiosController.build;
+const test = require('aqa');
+const jsdom = require('jsdom');
+const axios = require('axios').default;
+const axiosController = require('./axios-controller');
 
 // Mock DOM
 const { JSDOM } = jsdom;
@@ -11,7 +9,7 @@ const dom = new JSDOM();
 dom.reconfigure({ url: "http://mock/" });
 global.document = dom.window.document;
 
-function createMockProxy() {
+function createMockProxy(baseURL = '/api') {
     const calls=[];
     return {
         _calls() { return calls; },
@@ -20,13 +18,16 @@ function createMockProxy() {
         async post()    { calls.push(['post', ...arguments]); return { data: 'post' }; },
         async put()     { calls.push(['put', ...arguments]); return { data: 'put' }; },
         async patch()   { calls.push(['patch', ...arguments]); return { data: 'patch' }; },
-        async delete()  { calls.push(['delete', ...arguments]); return { data: 'delete' }; },
+        async delete() { calls.push(['delete', ...arguments]); return { data: 'delete' }; },
+        defaults: {
+            baseURL: baseURL
+        }
     }
 }
 
 test('proxy test', async t => {
     let proxy = createMockProxy();
-    let Controller = buildController(proxy);
+    let Controller = axiosController.build(proxy);
     
     let bookController = Controller('book', http => ({
         all: _ => http.get(),
@@ -83,7 +84,7 @@ test('proxy test', async t => {
 
 test('proxy test - no unwrap', async t => {
     let proxy = createMockProxy();
-    let Controller = buildController(proxy, {unwrap:false});
+    let Controller = axiosController.build(proxy, {unwrap:false});
     
     let bookController = Controller('book', http => ({
         all: _ => http.get()
@@ -101,37 +102,77 @@ test('proxy test - no unwrap', async t => {
 });
 
 
-test('url test', async t => {
-    let proxy = axios.create({ baseURL: 'http://www.example.app/api' });
-    let Controller = buildController(proxy);
+test('getUri - mock', async t => {
+    let proxy = createMockProxy('http://www.example.app/api/');
+    let Controller = axiosController.build(proxy);
     
     let bookController = Controller('book');
     
     // Test mock reponses
     t.is(bookController.getUri('test'), 'http://www.example.app/api/book/test');
     t.is(bookController.getUri('test', 'foo', 'bar'), 'http://www.example.app/api/book/test/foo/bar');
-    t.is(bookController.getUri(''), 'http://www.example.app/api/book/');
     t.is(bookController.getUri(), 'http://www.example.app/api/book/');
+    t.is(bookController.getUri(''), 'http://www.example.app/api/book/');    
+    t.is(bookController.getUri('test/'), 'http://www.example.app/api/book/test');
+    t.is(bookController.getUri('/test/'), 'http://www.example.app/api/book/test');
     t.is(bookController.getUri('/test'), 'http://www.example.app/api/book/test');
+    t.is(bookController.getUri('/'), 'http://www.example.app/api/book/');
 });
 
-test('url test - relative baseURL', async t => {
+test('getUri - mock relative', async t => {
+    let proxy = createMockProxy('');
+    let Controller = axiosController.build(proxy);
+    
+    let bookController = Controller('book');
+    
+    // Test mock reponses
+    t.is(bookController.getUri('test'), 'http://mock/book/test');
+    t.is(bookController.getUri('test', 'foo', 'bar'), 'http://mock/book/test/foo/bar');    
+    t.is(bookController.getUri(), 'http://mock/book/');
+    t.is(bookController.getUri(''), 'http://mock/book/');
+    t.is(bookController.getUri('test/'), 'http://mock/book/test');
+    t.is(bookController.getUri('/test/'), 'http://mock/book/test');
+    t.is(bookController.getUri('/test'), 'http://mock/book/test');
+    t.is(bookController.getUri('/'), 'http://mock/book/');
+});
+
+test('getUri - real axios instance', async t => {
+    let proxy = axios.create({ baseURL: 'http://www.example.app/api' });
+    let Controller = axiosController.build(proxy);
+    
+    let bookController = Controller('book');
+    
+    // Test mock reponses
+    t.is(bookController.getUri('test'), 'http://www.example.app/api/book/test');
+    t.is(bookController.getUri('test', 'foo', 'bar'), 'http://www.example.app/api/book/test/foo/bar');
+    t.is(bookController.getUri(), 'http://www.example.app/api/book/');
+    t.is(bookController.getUri(''), 'http://www.example.app/api/book/');    
+    t.is(bookController.getUri('test/'), 'http://www.example.app/api/book/test');
+    t.is(bookController.getUri('/test/'), 'http://www.example.app/api/book/test');
+    t.is(bookController.getUri('/test'), 'http://www.example.app/api/book/test');
+    t.is(bookController.getUri('/'), 'http://www.example.app/api/book/');
+});
+
+test('getUri - relative baseURL', async t => {
     let proxy = axios.create({ baseURL: '/api' });
-    let Controller = buildController(proxy);
+    let Controller = axiosController.build(proxy);
     
     let bookController = Controller('book');
     
     // Test mock reponses
     t.is(bookController.getUri('test'), 'http://mock/api/book/test');
     t.is(bookController.getUri('test', 'foo', 'bar'), 'http://mock/api/book/test/foo/bar');
-    t.is(bookController.getUri(''), 'http://mock/api/book/');
     t.is(bookController.getUri(), 'http://mock/api/book/');
+    t.is(bookController.getUri(''), 'http://mock/api/book/');
+    t.is(bookController.getUri('test/'), 'http://mock/api/book/test');
+    t.is(bookController.getUri('/test/'), 'http://mock/api/book/test');
     t.is(bookController.getUri('/test'), 'http://mock/api/book/test');
+    t.is(bookController.getUri('/'), 'http://mock/api/book/');
 });
 
-test('url test - all trailing and leading slashes', async t => {
+test('getUri - all trailing and leading slashes', async t => {
     let proxy = axios.create({ baseURL: 'http://www.example.app/api//' });
-    let Controller = buildController(proxy);
+    let Controller = axiosController.build(proxy);
     
     let bookController = Controller('//book//');
     

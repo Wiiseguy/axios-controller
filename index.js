@@ -1,2 +1,1 @@
-import axiosController from './axios-controller.js';
-export default axiosController;
+module.exports = require('./axios-controller.js');
