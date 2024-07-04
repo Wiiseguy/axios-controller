@@ -1,12 +1,13 @@
 {
   "name": "axios-controller",
-  "version": "0.6.3",
-  "description": "Easily create a proxy that matches your Web API Controller. Supports axios.",
+  "version": "1.7.2",
+  "description": "Easily create a controller proxy that matches your Web API Controller using axios.",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "test": "aqa",
-    "test:watch": "aqa --watch"
+    "test:watch": "aqa --watch",
+    "test:coverage": "c8 npm test & c8 report -r lcov"
   },
   "repository": {
     "type": "git",
@@ -26,8 +27,9 @@
   },
   "homepage": "https://github.com/Wiiseguy/axios-controller#readme",
   "devDependencies": {
-    "aqa": "^1.2.0",
-    "axios": "^0.27.2",
-    "jsdom": "^16.6.0"
+    "aqa": "^1.6.13",
+    "axios": "^1.7.2",
+    "c8": "^10.1.2",
+    "jsdom": "^16.7.0"
   }
 }

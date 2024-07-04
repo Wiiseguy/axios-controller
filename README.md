@@ -1,5 +1,5 @@
 # axios-controller
-Easily create a proxy that matches your Web API Controller.
+Easily create a controller proxy that matches your Web API Controller using axios.
 
 ### Installation
 ```
