@@ -239,7 +239,7 @@ test('bad controller method', async t => {
         notAPromise: _ => 1,
         nullPromise: _ => Promise.resolve(null),
         rejectingPromise: _ => Promise.reject(new Error('test')),
-        rejectingPromiseWithResponseData: _ => Promise.reject({ response: { data: 'test2' } }),
+        rejectingPromiseWithResponseData: _ => Promise.reject({ message: 'test2', response: { data: { login_failure: ['data_test2'] } } }),
     }));
 
     let e1 = await t.throwsAsync(async () => {
@@ -259,6 +259,7 @@ test('bad controller method', async t => {
         await bookController.rejectingPromiseWithResponseData();
     })
     t.is(e3.message, 'test2');
+    t.deepEqual(e3.cause, { login_failure: ['data_test2'] });
 
     let r2 = await bookController.nullPromise();
     t.is(r2, null);

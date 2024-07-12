@@ -17,7 +17,7 @@ function unwrap(promise) {
         })
         .catch(err => {
             if (err.response) {
-                return Promise.reject(new Error(err.response.data));
+                return Promise.reject(new Error(err.message, { cause: err.response.data }));
             } else {
                 return Promise.reject(err);
             }
