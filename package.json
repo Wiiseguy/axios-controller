@@ -1,6 +1,6 @@
 {
   "name": "axios-controller",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "description": "Easily create a controller proxy that matches your Web API Controller using axios.",
   "main": "index.js",
   "types": "index.d.ts",
